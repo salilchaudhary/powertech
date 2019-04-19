@@ -729,7 +729,7 @@
             "slides": [
               {
                 "image": "@PROJECT_PATH@/assets/images/slide1-768x384.png",
-                "active": false,
+                "active": true,
                 "showButtons": false,
                 "showText": true,
                 "showTitle": true,
@@ -765,7 +765,7 @@
               },
               {
                 "image": "@PROJECT_PATH@/assets/images/best-brand-award-800x419.jpg",
-                "active": true,
+                "active": false,
                 "showButtons": false,
                 "showText": false,
                 "showTitle": false,

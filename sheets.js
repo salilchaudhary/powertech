@@ -1,84 +1,74 @@
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
 console.log('Sheets script loaded');
 
 async function displayReferrals() {
-console.log('Starting to fetch referrals');
-
-// Replace with your actual Google Sheet ID
-const sheetId = '1tghfaNRNcr6-eovXRSyqHRjAqwAH2t0P5LaNkQnT4i0';
+// Replace this with your actual Google Sheet ID
+const sheetId = '1q1w6qPaOmxWYTGVB3_THuxOEKt0e0t9v-qdj-jvPTFI';
 const sheetName = 'Referrals Tracking';
 
 try {
 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-console.log('Fetching from URL:', url);
+console.log('Fetching data from:', url);
 
 const response = await fetch(url);
-console.log('Response received');
-
 const text = await response.text();
-console.log('Raw response:', text);
 
-// Parse the JSON data
+// Parse the Google Sheets JSON response
 const jsonData = JSON.parse(text.substring(47).slice(0, -2));
-console.log('Parsed data:', jsonData);
+console.log('Data received:', jsonData);
 
 const container = document.getElementById('referralsTableContainer');
-console.log('Container found:', container);
-
-if (!container) {
-console.error('Container element not found');
-return;
-}
-
-// Create table HTML
-let tableHTML = `
-<div style="width: 100%; overflow-x: auto;">
-<table style="width: 100%; border-collapse: collapse;">
+if (container) {
+// Create table structure
+let html = `
+<div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+<table style="width: 100%; min-width: 600px; border-collapse: collapse; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <thead>
 <tr>
-<th style="padding: 12px; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">Date</th>
-<th style="padding: 12px; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">Referral Name</th>
-<th style="padding: 12px; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">Status</th>
+<th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Timestamp</th>
+<th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Referral Name</th>
+<th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Phone</th>
 </tr>
 </thead>
 <tbody>
 `;
-
-// Add rows
+// Add data rows
+if (jsonData.table.rows.length > 0) {
 jsonData.table.rows.forEach(row => {
-tableHTML += '<tr style="border-bottom: 1px solid #dee2e6;">';
+html += '<tr style="border-bottom: 1px solid #dee2e6;">';
 row.c.forEach(cell => {
-tableHTML += `<td style="padding: 12px;">${cell ? cell.v : ''}</td>`;
+html += `<td style="padding: 15px;">${cell ? cell.v : ''}</td>`;
 });
-tableHTML += '</tr>';
+html += '</tr>';
 });
-
-tableHTML += `
+} else {
+html += `
+<tr>
+<td colspan="3" style="padding: 20px; text-align: center; color: #666;">
+No referrals found.
+</td>
+</tr>
+`;
+}
+html += `
 </tbody>
 </table>
 </div>
 `;
-
-container.innerHTML = tableHTML;
-console.log('Table rendered');
-
+container.innerHTML = html;
+}
 } catch (error) {
-console.error('Error:', error);
+console.error('Error fetching data:', error);
 const container = document.getElementById('referralsTableContainer');
 if (container) {
 container.innerHTML = `
-<div style="color: red; padding: 20px; text-align: center;">
+<div style="padding: 20px; text-align: center; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;">
 Error loading referrals data. Please try again later.
 </div>
 `;
 }
 }
 }
-
 // Call the function
 displayReferrals();
 });

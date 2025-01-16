@@ -3,7 +3,7 @@ console.log('Sheets script loaded');
 
 async function displayReferrals() {
 // Replace this with your actual Google Sheet ID
-const sheetId = '1q1w6qPaOmxWYTGVB3_THuxOEKt0e0t9v-qdj-jvPTFI';
+const sheetId = '1tghfaNRNcr6-eovXRSyqHRjAqwAH2t0P5LaNkQnT4i0';
 const sheetName = 'Referrals Tracking';
 
 try {
@@ -28,33 +28,39 @@ let html = `
 <th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Timestamp</th>
 <th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Referral Name</th>
 <th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Phone</th>
+<th style="padding: 15px; text-align: left; background: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #2C3E50;">Status</th>
 </tr>
 </thead>
 <tbody>
 `;
+
 // Add data rows
-if (jsonData.table.rows.length > 0) {
+if (jsonData.table.rows && jsonData.table.rows.length > 0) {
 jsonData.table.rows.forEach(row => {
 html += '<tr style="border-bottom: 1px solid #dee2e6;">';
+if (row.c) {
 row.c.forEach(cell => {
-html += `<td style="padding: 15px;">${cell ? cell.v : ''}</td>`;
+html += `<td style="padding: 15px;">${cell && cell.v ? cell.v : ''}</td>`;
 });
+}
 html += '</tr>';
 });
 } else {
 html += `
 <tr>
-<td colspan="3" style="padding: 20px; text-align: center; color: #666;">
+<td colspan="4" style="padding: 20px; text-align: center; color: #666;">
 No referrals found.
 </td>
 </tr>
 `;
 }
+
 html += `
 </tbody>
 </table>
 </div>
 `;
+
 container.innerHTML = html;
 }
 } catch (error) {
@@ -69,6 +75,7 @@ Error loading referrals data. Please try again later.
 }
 }
 }
+
 // Call the function
 displayReferrals();
 });
